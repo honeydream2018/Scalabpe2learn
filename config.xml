@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<parameters>
+
+    <ThreadNum>4</ThreadNum>
+
+    <SapPort>6210</SapPort>
+    <CohPort>7210</CohPort>
+    <DataDirRoot>/opt/data</DataDirRoot>
+    <AsyncLogArray>10</AsyncLogArray>
+
+    <Parameter name="serviceIdsAllowed">680</Parameter>
+
+    <Parameter name="testparam">@configservice:x   @configservice:y</Parameter>
+
+    <!--<InstallMock>testcase/t4.txt</InstallMock>-->
+
+    <!--<RegDisHook name="abc"/>-->
+
+    <!--
+    <assign>@user2=testabc</assign>
+    <assign>@user=222testabc</assign>
+    <DbSosList threadNum="8">
+        <ServiceId>635</ServiceId>
+        <MasterDb conns="8">
+			<defaultconn>jdbc:mysql://127.0.0.1:13306/chat?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true user=vip password=vip</defaultconn>
+        </MasterDb>
+    </DbSosList>
+    -->
+
+<!-- 以下是常用插件的最简配置示例，更多配置参数参考配置指南 -->
+<!--
+    <EtcdRegistry interval="10" enableConfigService="1" configPath="scalabpe" globalConfigPath="ops">
+        <Hosts>10.246.84.91:2379</Hosts>
+    </EtcdRegistry>
+-->
+<!--
+   <SosList discoverFor="userservice">
+        <ServiceId>998</ServiceId>
+        <ServerAddr>192.168.30.100:1111</ServerAddr>
+        <ServerAddr>192.168.30.101:1111</ServerAddr>
+        <ServerAddr>192.168.30.102:1111</ServerAddr>
+    </SosList>
+
+    <Server registerAs="demo"/>
+-->
+
+<!-- http server 配置 -->
+<!-- 
+    <HttpServerCfg  
+               maxUploadLength="2000000000"
+ 
+        registerAs="demoservicehttp" port="8088" devMode="1">
+
+        <UrlMapping>
+            <Item>test/queryUserInfo,999,1</Item>
+            <Item>test/updateUserInfo,999,2</Item>
+            <Item plugin="download">downloadtest1,999,3</Item>
+            <Item plugin="download">downloadtest2,999,4</Item>
+            <Item plugin="static_file" responseContentType="application/octet-stream">/downloadtest3,999,5</Item>
+            <Item >upload1,999,6</Item>
+        </UrlMapping>
+        <MimeTypes>
+            <Item>application/vnd.ms-excel xls xlsx</Item>
+        </MimeTypes>
+    </HttpServerCfg>
+-->
+
+<!-- 定时任务配置 -->
+<!-- 
+    <QuartzCfg>
+        <Cron serviceId="999" msgId="101">0/2 * * * * ?</Cron>
+        <Repeat serviceId="999" msgId="102" startDelay="1" repeatInterval="1"/> 
+        <Init serviceId="999" msgId="103" repeatInterval="10"/>
+    </QuartzCfg>
+-->
+
+<!-- 远程avenue服务配置 -->
+<!-- 
+    <SosList>
+        <ServiceId>998</ServiceId>
+        <ServerAddr>192.168.30.100:1111</ServerAddr>
+        <ServerAddr>192.168.30.101:1111</ServerAddr>
+        <ServerAddr>192.168.30.102:1111</ServerAddr>
+    </SosList>
+-->
+
+<!-- 本地缓存示例 -->
+<!-- 
+    <ConfigDb>
+        <ServiceId>997,986</ServiceId>
+        <ConnString>service=jdbc:oracle:thin:@//192.168.30.103:1521/cfg user=cfg password=cfg</ConnString>
+    </ConfigDb>
+-->
+
+<!-- 错误码转换配置 -->
+<!-- 
+    <ErrorCodeCfg localCacheServiceId="997">
+        <Service serviceId="998" resultCodeField="resultCode" resultMsgField="resultMsg"/>
+    </ErrorCodeCfg>
+-->
+
+<!-- 异步日志转发 -->
+<!-- 
+    <AsyncLogDispatch defaultTarget="999.1">
+        <Item serviceId="80" msgId="1" target="999.2"/>
+        <Item serviceId="80" msgId="2"/>
+        <Item serviceId="81" msgId="*" />
+    </AsyncLogDispatch>
+-->
+
+<!-- 发邮件配置 -->
+<!-- 
+    <MailCfg>
+        <ServiceId>996</ServiceId>
+    </MailCfg>
+-->
+
+<!-- 数据库配置 -->
+    <DbSosList threadNum="8">
+        <ServiceId>995,62100</ServiceId>
+        <MasterDb conns="8">
+            <DefaultConn>service=jdbc:oracle:thin:@192.168.30.104:1521/user user=test password=test</DefaultConn>
+        </MasterDb>
+    </DbSosList>
+<!-- 
+-->
+
+<!-- 数据库配置: master/slave 模式的数据库配置-->
+<!-- 
+    <DbSosList threadNum="8">
+        <ServiceId>995,62100</ServiceId>
+        <MasterDb conns="8">
+            <DefaultConn>service=jdbc:mysql://10.240.17.33:3306/chat?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true user=vip password=vip</DefaultConn>
+        </MasterDb>
+        <SlaveDb conns="8">
+            <DefaultConn>service=jdbc:mysql://192.168.52.128:3306/openfire?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=false user=openfire password=openfire</DefaultConn>
+        </SlaveDb>
+    </DbSosList>
+-->
+
+<!-- 同步数据库配置 -->
+<!-- 
+    <DbSosList threadNum="8">
+        <ServiceId>994</ServiceId>
+        <MasterDb conns="8">
+            <DefaultConn>service=jdbc:oracle:thin:@192.168.30.104:1521/user user=test password=test</DefaultConn>
+        </MasterDb>
+    </DbSosList>
+-->
+
+<!-- memcached配置 -->
+<!-- 
+    <CacheSosList readThreadNum="2" writeThreadNum="2">
+        <ServiceId>993,992</ServiceId>
+        <ServerAddr>192.168.30.104:11211</ServerAddr>
+        <ServerAddr>192.168.30.105:11211</ServerAddr>
+    </CacheSosList>
+-->
+
+<!-- redis配置, 服务描述文件和memcache完全一样 -->
+<!-- 
+    <RedisSosList readThreadNum="2" writeThreadNum="2">
+        <ServiceId>993,992</ServiceId>
+        <ServerAddr>192.168.30.104:6379</ServerAddr>
+        <ServerAddr>192.168.30.105:6379</ServerAddr>
+    </RedisSosList>
+-->
+
+<!-- http client 配置 -->
+<!-- 
+
+    <AhtCfg>
+
+    <ServiceId>991,990</ServiceId>
+    <TimeOut>15</TimeOut>
+
+    <Service>
+        <Item>
+            <ServiceId>991</ServiceId>
+            <MsgId>1</MsgId>
+            <ServerUrl>http://192.168.30.1/a</ServerUrl>
+        </Item>
+
+        <Item>
+            <ServiceId>990</ServiceId>
+            <MsgId>-1</MsgId>
+            <NeedSignature>true</NeedSignature>
+            <Method>POST</Method>
+            <CharSet>UTF-8</CharSet>
+            <RequestContentType>application/x-www-form-urlencoded</RequestContentType>
+            <ServerUrl>dynamic</ServerUrl>
+        </Item>
+
+        <Item>
+            <ServiceId>990</ServiceId>
+            <MsgId>1</MsgId>
+        </Item>
+
+        <Item>
+            <ServiceId>990</ServiceId>
+            <MsgId>2</MsgId>
+        </Item>
+
+    </Service>
+
+    </AhtCfg>
+-->
+
+<!-- 本地队列 -->
+<!-- 
+    <LocalQueueCfg receiverServiceId="988" maxSendTimes="5" retryInterval="5000">
+        <ServiceId>989</ServiceId>
+    </LocalQueueCfg>
+或
+    <ConnLocalQueueCfg receiverServiceId="988" concurrentNum="20"  maxSendTimes="5" retryInterval="30000">
+        <ServiceId>989</ServiceId>
+    </ConnLocalQueueCfg>
+-->
+
+<!-- redisv2配置 -->
+<!-- 
+    <RedisCfgV2>
+        <ServiceId>680</ServiceId>
+        <Cluster>1</Cluster>
+        <ServerAddr>10.246.84.91:7000</ServerAddr>
+        <ServerAddr>10.246.84.91:7001</ServerAddr>
+        <ServerAddr>10.246.84.91:7002</ServerAddr>
+    </RedisCfgV2>
+
+
+    <RedisCfgV2>
+        <ServiceId>680</ServiceId>
+        <ServerAddr>10.246.84.91:6379</ServerAddr>
+    </RedisCfgV2>
+-->
+    
+<!-- memcachev2配置 -->
+<!-- 
+    <MemCacheCfgV2>
+        <ServiceId>681</ServiceId>
+        <ServerAddr>192.168.52.128:11211</ServerAddr>
+        <ServerAddr>192.168.52.128:11212</ServerAddr>
+    </MemCacheCfgV2>
+-->
+
+<!-- hbase配置 -->
+<!-- 
+	<HbaseCfg>
+		<ServiceId>980</ServiceId>
+        <ZooKeeperServerAddr>192.168.52.128</ZooKeeperServerAddr>
+        <ZooKeeperServerPort>2181</ZooKeeperServerPort>
+	</HbaseCfg>
+-->
+
+<!-- kafka producer配置 -->
+<!-- 
+    <KafkaProducer>
+        <ServiceId>660</ServiceId>
+        <BrokerUrl>192.168.52.128:9092</BrokerUrl>
+    </KafkaProducer>
+-->
+
+<!-- kafka consumer配置 -->
+<!-- 
+    <KafkaConsumerV2>
+        <BootstrapServers>192.168.52.128:9092</BootstrapServers>
+        <Topic name="bslog" receiver="661.1" />
+        <Config key="session.timeout.ms">30000</Config>
+    </KafkaConsumerV2>
+-->
+
+<!-- activemq producer配置 -->
+<!-- 
+    <MqCfg>
+        <ServiceId>971</ServiceId>
+        <Connection>service=failover:(tcp://192.168.52.128:61616)?timeout=1000 username=test password=test</Connection>
+        <Destination serviceId="971" queueName="com.sdo.billing.test1" persistent="true"/>
+    </MqCfg>
+-->
+
+<!-- activemq producer配置 -->
+<!-- 
+    <MqReceiverCfg receiverServiceId="972" maxSendTimes="5" retryInterval="5000" >
+        <Connection>service=failover:(tcp://192.168.52.128:61616)?timeout=1000 username=test password=test</Connection>
+        <Destination queueName="com.sdo.billing.test1" />
+    </MqReceiverCfg>
+-->
+<!-- neo4j配置 -->
+<!-- 
+    <Neo4jCfg threadNum="8" conns="8">
+        <ServiceId>665</ServiceId>
+        <Connection>service=bolt://192.168.52.128 user=neo4j password=neo4jadmin</Connection>
+    </Neo4jCfg>
+-->
+
+</parameters>
+

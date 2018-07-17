@@ -1,0 +1,203 @@
+mem=1024M
+newsize=256M
+if [ "$SCALABPE_PROFILE" != "prd" -a "$SCALABPE_PROFILE" != "vrf"  ]; then
+    mem=256M
+    newsize=64M
+fi
+
+pidfile="scalabpe.pid"
+cd `dirname $0`
+pid=`cat $pidfile 2>/dev/null`
+APPLICATION_NAME=`pwd | sed 's,^\(.*/\)\?\([^/]*\),\2,'`
+tempdir=temp
+if [ "$SCALABPE_TEMPDIRROOT" != "" ]; then
+    tempdir=$SCALABPE_TEMPDIRROOT/$APPLICATION_NAME
+fi
+
+consolelog="/opt/logs/$APPLICATION_NAME/log/console.log"
+mkdir -p /opt/logs/$APPLICATION_NAME/log/
+touch $consolelog
+
+is64=`java -version 2>&1|grep 64-Bit|wc -l`
+if [ $is64 = "1" ]; then
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./lib/linux-jdk64
+chmod +x ./lib/linux-jdk64/*
+else
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./lib/linux-jdk32
+chmod +x ./lib/linux-jdk32/*
+fi
+
+CLASSPATH=`find lib -type d ! -name linux-jdk* | sed -e 's/$/\/*'/ | tr '\n' ':'`
+CLASSPATH=${CLASSPATH}$tempdir/classes:.
+
+check_running()
+{
+	if [ -z "$pid" ]; then
+		return 0
+	fi
+
+	fid=`ps aux|grep 'scalabpe.core.Main' | awk '{print $2}' | grep "^$pid$"`
+
+	if [ -z "$fid" ]; then
+		return 0
+	fi
+
+	return 1
+}
+
+start_app()
+{
+		check_running
+		running=$?
+
+		if [ $running = "1" ]; then
+			echo "scalabpe is already running, pid=$pid"
+			exit 0
+		fi
+
+		rm -f $pidfile
+		rm -f $consolelog
+		mkdir -p $tempdir/classes
+
+		echo -n "starting scalabpe"
+
+		java -Dapplication.name=$APPLICATION_NAME -Dscalabpe.profile=$SCALABPE_PROFILE -Dscalabpe.tempdirroot=$SCALABPE_TEMPDIRROOT -server -Xms$mem -Xmx$mem -XX:+UseConcMarkSweepGC -XX:NewSize=$newsize -XX:MaxNewSize=$newsize -cp "$CLASSPATH" scalabpe.core.Main 1>$consolelog 2>&1 &
+		pid=$!
+	    echo $pid > $pidfile
+		echo -n " ."
+
+		succmsg="scalabpe started"
+		exceptionmsg="Exception"
+		found=`tail -n 10 $consolelog | grep -c "$succmsg"`
+
+		while [ $found = "0" ]; do
+			sleep 1
+			echo -n "."
+			found=`grep -c "$exceptionmsg" $consolelog`
+			if [ $found != "0" ]; then
+				cat $consolelog
+				echo "scalabpe start failed"
+				exit 1
+			fi
+			found=`tail -n 10 $consolelog | grep -c "$succmsg"`
+		done
+
+	    echo " done, pid=$pid"
+}
+
+stop_app()
+{
+		check_running
+		running=$?
+
+		if [ $running = "1" ]; then
+			echo -n "killing scalabpe, pid=$pid"
+			kill $pid
+
+			echo -n " ."
+
+			check_running
+			running=$?
+
+			while [ $running = "1" ]; do
+
+				sleep 1
+				echo -n "."
+
+				check_running
+				running=$?
+
+			done
+
+			rm -f $pidfile
+			echo " done"
+
+		else
+			echo "scalabpe is not running"
+		fi
+
+}
+
+restart_app()
+{
+		stop_app
+		start_app
+}
+
+check_status()
+{
+		check_running
+		running=$?
+
+		if [ $running = "1" ]; then
+			echo "scalabpe is running, pid=$pid"
+		else
+			echo "scalabpe is not running"
+		fi
+}
+
+show_help()
+{
+cat << EOF
+
+usage:
+
+./service start     	# start scalabpe
+./service stop      	# stop scalabpe
+./service restart    	# restart scalabpe
+./service status     	# check scalabpe running status
+./service forcecompile  # force scalabpe to compile all flows in next startup
+./service runtest       # run test case file
+./service runscala      # enter scala console with all jars in lib/
+./service help      	# this help  (default)
+
+EOF
+}
+
+function shut_down() {
+    stop_app
+    exit
+}
+ 
+trap "shut_down" SIGTERM SIGINT 
+
+case "$1" in
+	start)
+		start_app
+		;;
+	startindocker)
+		start_app
+		while true; do 
+		    sleep 1
+		done
+		;;
+	stop)
+		stop_app
+		;;
+	restart)
+		restart_app
+		;;
+	status)
+		check_status
+		;;
+	forcecompile)
+		rm -f $tempdir/*ts
+		echo "scalabpe compile timestamp file removed"
+		;;
+	runtest)
+		mkdir -p $tempdir/classes
+		java -Dapplication.name=${APPLICATION_NAME} -Dscalabpe.profile=$SCALABPE_PROFILE -Dscalabpe.tempdirroot=$SCALABPE_TEMPDIRROOT -Dfile.encoding=UTF-8 -cp "$CLASSPATH" scalabpe.core.TestCaseRunner $2 $3 $4 $5 $6 $7
+	    exit $?
+		;;
+	runscala)
+		env JAVA_OPTS="-Dfile.encoding=UTF-8"  scala -cp "classes:$tempdir/classes:lib/*:."
+		;;
+
+	help)
+		show_help
+		;;
+	*)
+		show_help
+		;;
+esac
+

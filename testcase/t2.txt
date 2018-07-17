@@ -1,0 +1,161 @@
+
+global: 
+    define: $year=1998 $colors=["red","black","green"] map={"a":1,"b":2,"c":"3"}
+    setup:service999.echo  id:$inv1 req:   name=mike res: $code=0  msg=mike
+    setup:service999.echo  id:$inv2 req: name=mary res: $code=0 msg=mary 
+
+testcase:test1 enabled:0
+
+    assert:service999.echo  req:  name=123  
+        res: $year.length()=4  msg.length()=3 
+    assert:service999.echo  req:   name=$inv1.res.msg $inv2.res.msg  
+        res: msg=mike mary
+    assert:service999.echo  req:   name=$inv1.res.msg a\= $inv2.res.msg  # 注意：要用\=转义
+        res: msg=mike a\= mary # 注意：要用\=转义
+    assert:service999.echo  req:   name="$inv1.res.msg a\= ${inv2.res.msg}"  # 注意，要用\=转义, 引号里也要转义
+        res: msg="mike a\= mary" # 注意：要用\=转义, 引号里也要转义
+    assert:service999.echo  req:   name=abc${inv1.res.msg}def $inv2.res.msg
+        res: msg=abcmikedef mary
+
+    assert:service999.echo  req:   name=${contact(abc, def)} # 需要在FlowHelper.scala定义一个函数： def contact(a:String,b:String) = a + b 
+        res: msg=abcdef
+    assert:service999.echo  req:   name=$contact($inv1.res.msg,$inv2.res.msg)  
+        res: msg=mikemary 
+    assert:service999.echo  req:   name=>>> $contact($inv1.res.msg,$inv2.res.msg) <<< 
+        res: msg=>>> mikemary <<<
+
+    assert:service999.echo  req:   name=abcd () . , {"a":"${inv1.res.msg}","${inv2.res.msg}":"${year}"}  
+    assert:service999.echo  req:   name=s:{"${inv1.res.msg}":"1996","${inv2.res.msg}":"${year}"}  
+    assert:service999.echo  req:   name={"${inv1.res.msg}":1996,"${inv2.res.msg}":"${year}"}  
+
+    assert:service999.echo  req:   name=${contact($inv1.res.msg,$inv2.res.msg)}  
+        res: msg=mikemary
+    assert:service999.echo  req:   name=${contact(${inv1.res.msg},${inv2.res.msg})} 
+        res: msg=mikemary
+    assert:service999.echo  req:   name=${contact("${inv1.res.msg}","${inv2.res.msg}")} 
+        res: msg="mike""mary"
+
+    assert:service999.echo  req:   name=["${inv1.res.msg}","${inv2.res.msg}","${year}"] 
+
+    assert:service999.echo  req:   name=${contact( $inv1.res.msg  ,  $inv2.res.msg ) }  
+        res: msg=mikemary
+    assert:service999.echo  req:   name=${contact( ${inv1.res.msg}  ,  ${inv2.res.msg} )} 
+        res: msg=mikemary
+    assert:service999.echo  req:   name=${contact( "${inv1.res.msg.length()}" , "${inv2.res.msg}")} 
+        res: msg="4""mary"
+
+    assert:service999.echo  req:   name=$contact( ${inv1.res.msg} , ${inv2.res.msg} )  
+        res: msg=mikemary 
+    assert:service999.echo  req:   name=>>> $contact( ${inv1.res.msg} , ${inv2.res.msg} ) <<< 
+        res: msg=>>> mikemary <<<
+    assert:service999.echo  req:   name=$contact( $inv1.res.msg , $inv2.res.msg )  
+        res: msg=mikemary 
+    assert:service999.echo  req:   name=>>> $contact( $inv1.res.msg , $inv2.res.msg ) <<< 
+        res: msg=>>> mikemary <<<
+    assert:service999.echo  req:   name=$contact( $inv1.res.msg, $inv2.res.msg)  
+        res: msg=mikemary 
+    assert:service999.echo  req:   name=>>> $contact( $inv1.res.msg, $inv2.res.msg) <<< 
+        res: msg=>>> mikemary <<<
+
+    assert:service999.echo  req:   name=" $contact( $inv1.res.msg, $inv2.res.msg) " 
+        res: msg=" mikemary "
+    assert:service999.echo  req:   name= $contact( "${inv1.res.msg}", "$inv2.res.msg ") $year 
+        res: msg="mike""mary " 1998
+    assert:service999.echo  req:   name= $contact( "${inv1.res.msg}", abc def )
+        res: msg="mike"abc def
+
+testcase:test2 enabled:0
+
+    assert:echo id:inv4  req: m=$colors.toJson() $map.toJson()
+        res: $colors.size()=3
+             $colors[0]=red
+             $colors[1]=black
+             $colors.contains(green)=true
+             $map.size()=3
+             $map.contains(a)=true
+             $map.toJson().contains("a")=true
+
+    assert:service999.echo  id:inv3 req:   name= $contact( ${inv1.res.msg}, abc def )
+        res: $year.length()=4 
+            msg.left(4)=mike  
+            $inv3.res.msg.indexOf(ike)=1
+            $inv3.res.msg.contains(mike)=true
+            $inv3.res.msg.contains(abc)=true
+            $inv3.res.msg.contains(def)=true
+            $inv3.res.msg.contains(mmmmm)=false
+            $inv3.res.msg.right(3)=def
+            $inv3.res.msg.matches(mike.*)=true
+            $inv3.res.msg.matches(.*abc.*)=true
+            $inv3.res.msg.matches(.*def$)=true
+            $contact(abc,def)=abcdef
+            $contact($year,def)=1998def # 需要在FlowHelper.scala定义一个函数： def contact(a:String,b:String) = a + b 
+            $inv3.res.msg.contact(mmm).matches(.*mmm$)=true # string对象的函数需要在FlowHelper.scala定义一个函数,第一个参数是string,也就是对象本身： def contact(obj:String,param:String) = obj + param, 实际上和$contact()引用的是相同的函数 
+
+    assert:service999.echo  req:   name=abc
+        res: 
+            msg.contains(abc)=true
+            msg.contains(mmm)=false
+            msg.contains(msg)=true  # 注意，参数里的msg是个表达式，会解析成实际值：abc, 所以assert结果是true
+            $inv3.res.$code=0
+
+    assert:service999.echo  req:   name=abc$inv3.res.$code
+        res: 
+            msg=abc0
+
+    assert:service999.echo  req:   name=abc$inv3.res.$code mmm
+        res: 
+            msg=abc0 mmm
+
+testcase:test3 enabled:0
+    assert:service999.echo  req:   name= { $inv1.res.msg , $inv2.res.msg  
+        res: msg={ mike , mary
+    assert:service999.echo  req:   name=hello${year}
+        res: msg.contains($year)=true
+
+testcase:test3 enabled:0 # 转义测试, 足够复杂了
+
+    assert:sleep  req:   m=abc\=\\= 
+    assert:service999.echo  req:   name=abc\=\\=
+        res: msg.length()=6  # abc=\=
+
+    assert:sleep  req:   m= \( $inv1.res.msg , $inv2.res.msg
+    assert:service999.echo  req:   name= \( $inv1.res.msg , $inv2.res.msg
+        res: msg=( mike , mary
+
+    assert:sleep  req:   m=\\,\\(
+    assert:service999.echo  req:   name=\\,\\(
+        res: msg.length()=4 #  \.\(
+
+    assert:sleep  req:   m=\.\,\[\]\(\)\$\{\}
+    assert:service999.echo  req:   name=\.\,\[\]\(\)\$\{\}
+        res: msg.length()=9 # .,[]()${}
+
+    assert:sleep  req:   m=abc\.\,\[\]\(\)\$
+    assert:service999.echo  req:   name=abc\.\,\[\]\(\)\$
+        res: msg.length()=10 # abc.,[]()$
+
+    assert:sleep  req:   m=\\.\\,\\[\\]\\(\\)\\{\\}\\$
+    assert:service999.echo  req:   name=\\.\\,\\[\\]\\(\\)\\{\\}\\$
+        res: msg.length()=18 #\,\[\]\(\)\{\}\$
+
+    assert:sleep  req:   m=\\$\\.\\,\\[\\]\\(\\)
+    assert:service999.echo  req:   name=\\$\\.\\,\\[\\]\\(\\)  # $后面的看成表达式引用
+        res: msg.length()=1 # \
+
+
+testcase:test4 enabled:1
+    assert:service999.echo  req:   name=123 
+        res: msg.length().ge(3)=true
+             msg.length().ge(4)=false
+             msg.length().gt(3)=false
+             msg.length().lt(3)=false
+             msg.length().le(3)=true
+             msg.substring(1,3)=23
+
+    assert:service999.echo  req:   name=123 
+        res: msg=123  
+             msg!=def
+             msg!=NULL 
+             msg2=NULL
+             msg2!=abc
+

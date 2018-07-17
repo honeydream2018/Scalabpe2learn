@@ -1,0 +1,376 @@
+1.2.6 (20171003)
+================
+
+* (1003)删除sos中无用的pushToIp, pushToAny推送模式
+* (0925)修改netty client里的拼写错误，reuserAddress改成 reuseAddress
+* (0920)request日志里增加服务名消息名, csos日志里增加uniqueId
+* (0920)avenue 2.0协议调整：新增的long,double,object,vstring可用在1.0/2.0, 老的类型全部兼容，协议版本调整只针对avenue包头
+
+1.2.5 (20170907)
+================
+
+* (0711)支持avenue 2.0协议
+* (0701)avenue v2版本，更小的包头，更大的扩展包头
+
+1.2.4 (20170618)
+================
+
+* (0618)runtest工具增加覆盖率统计开关，--cover
+
+1.2.3 (20170527)
+================
+
+* (0527)增加.flow.scala后缀格式的流程，可以直接写scala类来实现流程，便于在ide中开发
+
+1.2.2 (20170522)
+================
+
+* (0410)enableExtendTlv默认值由false改为true
+* (0412)netty client支持reconfig方法可以动态配置目标地址
+* (0412)parameter.xml文件也支持profile
+* (0412)router支持regdishook插件类型以便支持注册与发现
+* (0413)测试框架远程测试模式也支持profile查找不同的配置文件
+* (0414)soc组件支持连接需要的加密服务器
+* (0414)增加Router.profile,默认为default,对应config.xml; 加载的是config_xxx.xml，profile值就是xxx
+* (0418)测试组件特殊的connId参数，用于指定用例中的connId,通过req.remoteAddr可以取到这个值,避免对取对端地址的地方做硬编码
+* (0418)修改test中右值无法引用非String对象的bug
+* (0421)修改runtest如果有测试用例失败或异常，进程退出码设置为1
+* (0421)修改profile下config.xml选择方式
+* (0421)修改parameter xml参数替换的一个bug, 此功能不向下兼容，老版本配置文件里若有特殊字符，需用cdata避免转义
+* (0424)在docker运行下可通过环境变量SCALABPE_HOST获取主机IP
+* (0425)修改installmock的加载逻辑，等参数化配置文件完成后再获取实际值
+* (0425)netty soc在未配置连接地址的情况下不等待连接成功
+* (0425)router类增加started启动完成标志
+* (0427)修改取本地IP地址的方法，排除docker0 ip(172.17.0.1)
+* (0427)支持从环境变量SCALABPE_TCP_PORT/SCALABPE_HTTP_PORT获得外部端口，用于docker环境下获取到外部绑定的端口
+* (0428)单元测试模式下不绑定http端口
+* (0505)runtest all_files支持2级子目录
+* (0508)修改linux下runtest初次运行报错的bug
+* (0509)runtest工具支持http调用，增加了3个指令：setup_http, assert_http, teardown_http; 支持cookie
+* (0519)修改runtest工具对设置header属性的一个bug
+* (0522)runtest工具支持http上传和下载; 命令行支持*通配符来匹配要测试的文件;不同域名cookie分开保存
+
+1.2.1 (20170408)
+================
+
+* (0408)tlvcodec类增加msgIds记录每个消息在服务描述文件里的顺序
+* (0408)runtest工具增加--all_files参数，对testcase下所有文件运行测试,无需手工指定文件名
+* (0408)sos组件的shakeHandsServiceIdMsgId支持配置多个消息
+
+1.2.0 (20170405)
+================
+
+* (0330)支持config.xml中<DataDirRoot>,可将data放在非当前目录下
+* (0330)支持SCALABPE_TEMPDIRROOT环境变量，可将temp放在非当前目录下
+* (0330)支持SCALABPE_PROFILE环境变量,根据profile加载不同的config_xxx.xml文件
+* (0330)代码未做改动，改到jdk 1.8和scala 2.12.1下编译
+* (0405)包名从jvmdbbroker修改成scalabpe
+
+1.1.15 (20170328)
+================
+
+* (0328)tlv codec解析时记录所有元数据,用于文档输出
+
+1.1.14 (20170306)
+================
+
+* 测试框架：按定义顺序执行指令(除teardown)
+* 测试框架：mock里的表达式在被调用时动态执行，mock请求为校验表达式，类似assert
+* 测试框架: 支持!=， 支持$this.req.xx $this.res.xxx, 明确几个特殊字符的转义处理
+* 测试框架: testcase 支持extends:语法，可将多个testcase的公共部分放在一个公共testcase中每次都执行
+* Flow基类支持filterRequest,filterInvoke,filterReply方法,可以将一些公共方法放在基类中统一处理
+* 去除日志中值可能出现",空格空格"引起的解析问题
+* config.xml中支持InstallMock配置属性，可以在正常启动后安装一些mock, 可用于开发过程中联调
+* 测试框架: global节点支持remote属性，可使用远程tcp方式调用服务
+* 在jdk1.8.0+scala2.12.1下编译通过，对代码微调，消除一些警告(注意: 只是源码可通过编译,此工程里使用的jar包必须是scala2.10.2的包, 不可随意升级scala版本)
+* aht插件增加maxContentLength配置参数，默认为1M
+* codec对加密通道的数据解密的时候应对心跳包忽略
+* 异步日志中的AsyncLogLogId默认改为关闭
+* 修改测试框架在remote模式下的bug
+
+1.1.13 (20170105)
+================
+
+* 继续完善集成测试框架
+
+1.1.12 (20170104)
+================
+
+* 继续完善集成测试框架, 前一个版本使用起来还有较多问题
+* 测试框架增加define支持，支持复杂的表达式，支持全局函数和对象函数，函数参数也可使用表达式，函数扩展方式, 引用
+* mock运行时不自动绑定端口，避免冲突无法启动
+
+1.1.11 (20161219)
+================
+
+* HashMapStringAny,Request,InvokeResult 增加.nls() .nli() .nlm()方法，如果取到的值为null, 则返回一个空的buff
+* 修改JsonCodec的parseObjectNotNull的bug
+* invokeAutoReply在已经调用过reply的情况不再调用reply方法
+* 修改runtest工具 简单版本，调用方式改为串行调用，一个调用完毕后再调用下一个接口
+* 修改runtest工具 集成测试版本，增加新的集成测试方法， 支持 mock, setup, teardown, assert, 使用方法参考 测试指南
+
+1.1.10 (20161124)
+================
+
+* 日志中增加对logId的输出
+* HashMapStringAny,Request,InvokeResult 增加.nm()方法，如果取到的map为null, 则返回一个空的map
+* JsonCodec新增 parseArrayInt parseArrayString parseArrayObject paseObjectNotNull  parseArrayIntNotNull parseArrayStringNotNull parseArrayObjectNotNull
+* 新增 invokeXxxAutoReply系列方法，当出错的时候直接reply错误码然后结束流程，不调用callback函数，可以使流程编写者只写正常流程；可通过入参errorCode指定返回的错误码
+* config.xml文件中也可通过<assign>...</assign>来设置变量
+* struct的field支持default属性
+
+1.1.9 (20161027)
+================
+
+无变动
+
+1.1.8 (20161008)
+================
+
+* runtest测试工具： 支持在扩展包头插入标准头，在json中使用x_socId,x_spsId,x_appId,x_uniqueId来指定标准head
+* 类似.s()方法，增加了一组辅助方法：.ns(key,default), .l() .d() .bd() 方法从map里取值
+    .ns(key) 返回空串代替null
+    .ns(key,default) 如果返回时null或空串，返回default
+    .l(key) 返回Long类型数据
+    .d(key) 返回Double类型数据
+    .bd(key) 返回BigDecimal类型数据,用于避免金额计算时的误差
+* 扩展包头支持新的logId参数,code=13, 可用于存deviceId值
+
+1.1.7 (20160927)
+================
+
+* 修改bug: 修改1.1.5修改编译引入的一个路径错误，会导致修改流程文件后编译失败
+
+1.1.6 (20160919)
+================
+
+* 修改bug: 修改解析config.xml parameter @xxx 的一个bug: 如果@xxx被嵌套在cdata节点中，则最后一个@xxx]]>无法解析
+* 修改取本地ip的辅助类，优先取hostname对应的ip
+
+1.1.5 (20160914)
+================
+
+* 修改bug: 启动时编译流程不会自动加载lib的子目录, 导致不能随便将jar文件移动到lib的子目录不
+
+1.1.4 (20160902)
+================
+
+* service runtest工具可配置maxPackageSize
+* 修改service启动脚本，自动将lib下所有子目录加入classpath, 以便将某些依赖较多的组件单独建子目录，如hadoop,kafka等
+* 1.1.2版本调整有问题，异步日志依赖nettyhttpclient.scala, 将该文件移动回core包
+* 异步日志模块：request_audit.log文件中记录扩展包头的uniqueId到现有的requestId后面，若扩展包头没有该值，记录1
+* 增加LocalStorage辅助类，用于在本地存储配置数据或状态
+* 增加对Global.init, Global.close方法的支持, 可以在框架启动和关闭的时候做加载数据和保存数据的工作
+* 修改config_parameter.xml文件，改到子目录下并调整文件名：config_parameter/parameter.xml
+
+1.1.3 (20160817)
+================
+
+* 无变更
+
+1.1.2 (20160811)
+================
+
+* 代码重新格式化，统一换行符和字符集
+* core层下的netty http代码移回plugin/http包下
+
+1.1.1 (20160719)
+================
+
+* (07/19)HashMapStringAny的.lm .ls .li方法支持从ArrayBufferAny对象中取数据, 用于从JsonCodec解析出的对象取值
+* (07/19)增加LinkedHashMapStringAny，用于生成需要保持插入顺序的json数据
+
+1.1.0 (20160617)
+================
+
+* (06/17)开源版本
+
+1.0.12 (20160525)
+================
+
+* (05/25)router里增加getRawConfig
+* (05/25)router里增加InitHook，可以调用第三方的类来加载配置参数, 为配置参数放在ucs服务里提供支持
+* (05/19)增加libsec.so, 解密密钥和算法移到jni代码中
+* (05/17)router启动的时候支持init bean, 会等待bean启动完毕才会继续启动服务
+* (05/17)config.xml支持使用@xxx定义变量，从config_parameter.xml文件中读取，用于分离敏感数据
+
+1.0.11 (20160504)
+================
+
+* (05/04)扩展包头支持httpType, responsefilter支持req参数
+* (04/20)nettyhttpserver支持maxContentLength参数
+* (04/15)流程中增加sleep(callback,timeout)方法，可以调用此方法以异步的方式等待，不会阻塞线程; 
+         在sleep callback中得到的错误码总是-10242504(超时)，如果流程中会循环sleep, 应检查Flow.router.shutdown.get()是否为true，若为true,应尽快结束流程
+* (02/26)增加maskencoder, 对phone,account, email和一般的加掩码处理的支持
+* (02/26)htmlfilter,attackfilter增加对\的过滤
+* (02/25)validator里的require改成required
+* (02/17)增加nocaseencoder,attackfilter; 增加对commons-lang 3.1 jar包的依赖
+* (02/17)对encoder功能，仅限制在对请求解码和对响应编码时；  对请求编码和响应解码时不做编码处理;
+* (02/14)服务描述文件增加对defaultValue, validator, encoder的支持
+
+1.0.10 (20151222)
+================
+
+* (12/22)ServerSos增加maxConns配置参数，控制最大连接数；去掉sps模式下连接断开时通知后台服务多打印的一行错误日志
+* (12/18)反向调用代码优化，将反向调用相关配置参数集中到<ServerSos>节点配置
+         修复sos内存泄露问题，在做内网长连接服务不会触发，但作为外网节点频繁的连接会有问题
+         优化sos连接信息的map，不使用反向调用服务时不记录这些信息
+         支持sps模式下握手和加密
+         修复12/08日版本引入的bug: sos处理流程完毕后无法回消息
+* (12/16)httpserver优化
+* (12/10)httpserver增加对静态文件和模板文件的支持
+* (12/08)支持作为不加密的SPS服务启动，可以和route服务通讯，支持3号服务下发消息, 新增配置参数：isSps, spsReportTo, spsDisconnectNotifyTo
+* (11/20)修改异步日志request_audit日志格式，调整几个field记录不准确的值：client_ip client_port soc_name server_ip字段的值
+* (11/13)修改baseEndFlow的一个bug, 多余的unlock
+* (10/14)Flow对象增加baseReceive和baseEndFlow，用于用户自定义流程类
+* (10/14)修改启动的编译过程，flow文件的服务名声明时支持.with(classname)语法, classname可以是类名(默认为scalabpe.flow包)或包含包名的类名, 则该流程将继承该类
+* (10/13)调整源码位置，将actor_soc移到core包
+* (10/13)增加httpserver包，兼容hps的基本功能,参考manual
+
+1.0.9 (20150828)
+================
+
+* (08/28)增加配置参数disabledMsgIdFrom_服务号=xxx(xxx必须>=1000)，可配置某服务号下从哪个msgId开始不允许外部调用,只允许本机调用，用在服务描述文件中的一些不对外的子服务
+* (08/10)增加对扩展tlv支持，允许tlv数据超过65535
+* (05/04)增加selfcheck server处理时的try catch
+* (03/19)trigger.xml中索引字段可用msgId=-1配置默认值，简化配置
+* (03/19)修改获取本地IP的方式
+* (02/27)增加genereate scala src file的单独功能，用于eclipse,ideal集成时根据flow文件生成scala文件
+* (02/27)启动时检查runninginide环境变量，如果等于yes,则跳过编译阶段，直接运行；用于eclipse,ideal集成
+* (02/27)修改TypeSafe.anyToString(name,defaultValue)里的bug
+* (02/27)修改2/16日版本编译超过2级目录引入的新bug: 未考虑windows路径, windows下无法运行
+* (02/16)服务描述文件中每个消息里的field项type通常都是$key_type，改为允许为空，如果为空，则认为值为 $key_type
+         注意，对于需要和c++版本交互的服务描述文件，不能省略，c++版本不支持省略type定义
+* (02/16)修改启动时的编译过程
+        compose_conf目录不再限制只有2层目录，允许多层目录
+        compose_conf目录及子目录下的scala,flow文件只要在不同目录就允许同名
+* (02/16)将异步日志的线程数默认值由2改为1，这样异步日志中默认是发生顺序输出而不会乱序
+* (02/12)新增的route dump还有bug, 修改以免影响正常错误日志的输出
+* (02/06)修改流程中无法返回单个的结构体的bug
+* (01/28)route dump的时候加上try catch，以免影响正常错误日志的输出
+* (01/26)runtest文件里的json现在可以支持传递数组和结构体参数；如果config.xml里配置了  <TestServerAddr>host:port</TestServerAddr>, 则也可以用runtest工具将请求发给远程服务器。
+* (01/26)增加DumpBeforeClose配置参数，在关闭系统前先做一次dump，便于服务端异常时分析内存数据堆积问题；默认为true
+* (01/21)线程池的队列大小统一从100000修改为20000
+* (01/20)scalabpe.core包中增加JsonCodec类用于json的转换操作
+    常用方法：
+        def parseSimpleJson(s:String):HashMapStringAny // 解析无嵌套的json串 
+        def parseJson(s:String):Any // 解析嵌套json串，根据顶层类型可能是HashMapStringAny或ArrayBufferAny，需自己转换类型
+        def parseObject(s:String):HashMapStringAny // 解析嵌套对象
+        def parseArray(s:String):ArrayBufferAny // 解析嵌套数组
+        def mkString(m:HashMapStringAny): String // map转换成json串
+        def mkString(a:ArrayBufferInt): String // array转换成json串
+        def mkString(a:ArrayBufferString): String // array转换成json串
+        def mkString(a:ArrayBufferMap): String // array转换成json串
+        def mkString(a:ArrayBufferAny): String // array转换成json串
+* (01/20)流程中可使用logVar(key,value)将变量加入异步日志,此值也会由AsyncLogDispatch转发给接收方；
+* (01/20)trigger_config.xml增加日志索引字段的配置，和c++版本配置不同，使用 index="a,b,c" 属性配置；索引字段可以为请求/响应/流程变量
+    默认按服务描述文件输出所有请求，响应，流程变量；如配置了trigger_config.xml则按配置输出，item子节点request,response可不配置，则按服务描述文件输出
+    当需要配置索引字段时，必须使用trigger_config.xml，但可简化成如下配置方式:
+    <item serviceid="999" msgid="27" index="b,nn"/> 值配置索引字段，不配置具体参数
+* (01/20)增加日志转发功能，对应配置节点:
+    <AsyncLogDispatch defaultTarget="999.28">
+            <Item serviceId="999" msgId="27" target="999.28"/>
+    </AsyncLogDispatch>
+    其中msgId可用*代替匹配所有消息; target可不配置，则取defaultTarget默认值
+    可转发给本地服务或远程服务；为避免消息丢失，可在服务描述文件将消息设为必达消息, isAck="true"
+    目标消息的服务描述文件要求：
+        serviceId 服务号
+        msgId 消息号
+        kvarray string array, 请求，响应，流程变量
+* (01/19)修改异步日志中SimpleDateFormat对象在多线程访问时format可能出错的问题
+* (01/11)启动时检查服务描述文件中是否存在一个code对应多个数组类型的定义
+* (01/11)invoke方法可通过传递head.encoding参数指定字符集
+* (11/24)异步日志服务 修复对错误码为正数的判定为请求失败而不是成功
+* (11/25)异步日志服务 修复AsyncLogArray配置参数对db返回结果为字符串/int数组不起作用的bug
+
+1.0.8 (20141121)
+================
+
+* 异步日志服务增加AsyncLogPasswordFields参数，可控制日志中是否打印密码 
+* 修改结构体数组未按目标服务描述文件做编解码导致map类型不正确，不会影响流程，但如果要根据该map生成json，json的类型不正确
+* 不同子目录下文件名不允许重复，修改没有正确检出的BUG
+* 修改和c++ bpe不兼容的地方：c++版本要求数组类型tlv编码后必须连续，scala版本无此要求，已改为兼容
+* 修改异步日志如果服务描述不存在会报异常的bug 
+* 删除异步日志的内容中出现的回车换行符以避免一行的日志不完整
+* 修改了异步日志线程池的execute(runnable)未catch的问题，如果磁盘故障或空间满可能导致reject异常进而导致线程被杀掉后不断创建线程，检查所有类似地方加上catch 
+
+1.0.7 (20140904)
+================
+
+* 修改soc,sos，支持反向调用(SOS调用SOC)，可以在流程中调用客户端的接口，比如推送给3号服务或其它服务
+* SOS调用SOC支持有状态和无状态的客户端, 对无状态客户端，可配置允许的IP
+* 增加reverseServiceIds配置反向调用的服务号
+* 增加ServerSos配置节点，提供更多配置参数
+* 修改invokeWithToAddr接口不支持用域名配置服务器(logsearcher使用)
+
+* struct 里string如果len不是4的整数倍有bug，编码时未对齐，会导致解码错误
+
+    !!! 注意，老版本若有结构体定义，需检查下string len是否为4的整数倍
+
+* struct 编码时传入的map如果有key但value为null会报异常，调整为编码为空字符串
+* string array编码时，如果数组中有null值，编码时会被忽略，改为编码为空字符串
+* struct 里支持 systemstring，可不用指定len
+* Request对象增加clientIp返回客户端IP, remoteIp返回对端IP, remoteAddr返回对端IP:PORT
+* 扩展包头取字段处理, 取第一个而不是最后一个
+* Request对象增加i(key,defaultValue)方法，用于取整数
+
+* AsyncLog组件增加配置项<AsyncLogArray>1</AsyncLogArray>,用于控制对数组类型日志打印前几条数据，默认为1 
+
+1.0.6 (20140805)
+================
+
+* tlv 解码对session服务8字节对齐时的填充的字节做特殊处理，不打错误日志
+
+1.0.5 (20140404)
+================
+
+* 流程Flow对象中新增invokeMulti方法，接收ArrayBuffer[InvokeInfo]参数，内部均改为调用此方法； 原来的invoke是用List[InvokeInfo]
+* soc组件增加了新功能，这些新增功能均通过新增的开关来开启，这些新增的功能目前仅在聊天压力测试客户端场景下用到
+		waitForAllConnected: 是否等待所有连接完成再继续启动
+		waitForAllConnectedTimeout: waitForAllConnected开关对应的时间,毫秒
+		connectOneByOne: 是否一个一个按顺序连接，而不是并发连接
+		reuseAddress: 是否重用地址
+		startPort: 使用startPort开始的端口，每用完一个递增一个端口，如被占用，则取下一个
+* core包里面request对象新增toAddr属性，流程FLow对象增加一个invokeWithToAddr方法，用来选择相同服务号的指定的服务器(仅适用于同一服务号提供不同服务，目前仅用在search engine上)
+* 修改tlv解码时 short -> int 转换bug (单个field超过signed short会导致解析错误)
+
+1.0.4 (20140303)
+================
+
+* soc组件增加了新功能，均通过新增的开关来开启，这些新增的功能仅用于聊天压力测试客户端
+		1) 支持多个soc共享线程池资源，timer等
+		2) soc支持对数据包做整体加密
+		3) soc支持对每个连接进行握手，每个连接使用不同的加密秘钥
+
+1.0.3 (20140122)
+================
+
+* 流程异常时输出完整的栈信息，便于定位问题
+* 增加配置参数AsyncLogWithFieldName，控制输入输出参数日志是否加参数名前缀
+
+1.0.2 (20131212)
+================
+
+* 监控数据上报功能
+* 将plugin/http/nettyhttpclient改到core包下
+
+1.0.1 (20131210)
+================
+
+* 兼容dbbroker功能：服务描述文件中的 type 的名称不区分大小写
+* 兼容dbbroker功能：avenue_conf支持一级子目录，但是要求子目录中的文件名不能和上层目录文件名重复
+* 兼容dbbroker功能：compose_conf支持一级子目录，但是要求子目录中的文件名不能和上层目录文件名重复
+* 流程引擎中增加autoReply功能: 如果流程结束而没有reply过，会自动回复最后一次errorcode
+* 必达消息服务描述文件里的isack, isAck大小写兼容
+
+1.0.0 (20131120)
+================
+
+* 初始版本
+* avenue协议栈支持: codec, sos, soc
+* flow引擎: router, flow
+* 插件体系: router
+* 异步日志: aysnclog
+* flow编译功能: compiler
+* 必达消息支持：mustreach
+* 管理功能: 自检,刷新,DUMP

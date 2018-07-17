@@ -1,0 +1,38 @@
+
+version="1.2.6"
+pluginversion="1.2.6"
+
+show_help()
+{
+cat << EOF
+
+usage:
+
+./build                     # build all source files including test cases (default)
+./build clean               # remove temp files
+./build help                # this help
+
+EOF
+}
+
+case "$1" in
+	clean)
+		rm -fr classes/*
+		rm -fr temp/*
+		rm -f  ./lib/scalabpe-core-*.jar
+		rm -f  ./lib/scalabpe-plugins-*.jar
+		;;
+	help)
+		show_help
+		;;
+	*)
+		if [ ! -d classes ] ; then mkdir classes; fi;
+        env JAVA_OPTS="-Dfile.encoding=UTF-8" scalac -deprecation -encoding UTF8 -cp "./lib/*:./lib/log/*:." -d "./classes" src/scalabpe/core/*.scala src/scalabpe/plugin/*.scala src/scalabpe/plugin/http/*.scala src/scalabpe/plugin/cache/*.scala
+		cp -f src/scalabpe/plugin/scalabpe.plugins.conf ./classes/
+		cp -f src/scalabpe/core/release_notes.txt ./classes/
+		jar cf ./lib/scalabpe-core-$version.jar -C ./classes/  ./scalabpe/core -C ./classes/ ./release_notes.txt
+		cp -f src/scalabpe/plugin/release_notes.txt ./classes/
+		jar cf ./lib/scalabpe-plugins-$pluginversion.jar -C ./classes/  ./scalabpe/plugin -C ./classes/ ./scalabpe.plugins.conf -C ./classes/ ./release_notes.txt
+		;;
+esac
+

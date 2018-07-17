@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+</appender>
+
+<appender name="ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/${application.name}/log/root.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/${application.name}/log/root.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+
+<appender name="SYNCALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/${application.name}/log/all.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/${application.name}/log/all.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+
+<appender name="ALL" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="SYNCALL" />
+</appender>
+
+<appender name="SOC" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/${application.name}/log/soc.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/${application.name}/log/soc.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+
+<appender name="REQUESTLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/${application.name}/auditlog/request_audit.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/${application.name}/auditlog/request_audit.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS},  %msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+<appender name="CSOSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/${application.name}/auditlog/csos_audit.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/${application.name}/auditlog/csos_audit.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS},  %msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+<appender name="REQSTATLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/${application.name}/auditlog/request_stat.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/${application.name}/auditlog/request_stat.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+<appender name="REQSUMMARYLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/${application.name}/auditlog/request_summary.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/${application.name}/auditlog/request_summary.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+<appender name="SOSSTATLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <file>/opt/logs/${application.name}/auditlog/sos_stat.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+    <fileNamePattern>/opt/logs/${application.name}/auditlog/sos_stat.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+
+<appender name="HTTPREQUESTLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>/opt/logs/${application.name}/auditlog/http/request_audit.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>/opt/logs/${application.name}/auditlog/http/request_audit.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS},   %msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+<appender name="HTTPACCESSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>/opt/logs/${application.name}/auditlog/http/access.log</file>
+  <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>/opt/logs/${application.name}/auditlog/http/access.log.%d{yyyy-MM-dd}</fileNamePattern>
+    <maxHistory>5</maxHistory>
+  </rollingPolicy>
+  <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}  %msg%n</pattern>
+      <charset>UTF-8</charset>
+  </encoder>
+</appender>
+
+<logger name="scalabpe" level="info" additivity="false"><appender-ref ref="ALL" /></logger>
+<logger name="scalabpe.core.Main" level="info" additivity="false"><appender-ref ref="ALL" /><appender-ref ref="STDOUT" /></logger>
+<logger name="scalabpe.core.NettyServer" level="info" additivity="false"><appender-ref ref="ALL" /><appender-ref ref="STDOUT" /></logger>
+<logger name="scalabpe.core.FlowCompiler" level="info" additivity="false"><appender-ref ref="ALL" /><appender-ref ref="STDOUT" /></logger>
+<logger name="scalabpe.core.NettyClient" level="info" additivity="false"><appender-ref ref="SOC" /></logger>
+<!--<logger name="scalabpe.plugin.etcdreg" level="debug" additivity="false"><appender-ref ref="SOC" /></logger>-->
+
+<logger name="scalabpe.ReqStatLog" level="info" additivity="false"><appender-ref ref="REQSTATLOG" /></logger>
+<logger name="scalabpe.ReqSummaryLog" level="info" additivity="false"><appender-ref ref="REQSUMMARYLOG" /></logger>
+<logger name="scalabpe.SosStatLog" level="info" additivity="false"><appender-ref ref="SOSSTATLOG" /></logger>
+
+<logger name="scalabpe.RequestLog" level="info" additivity="false"><appender-ref ref="REQUESTLOG" /></logger>
+<logger name="scalabpe.CsosLog" level="info" additivity="false"><appender-ref ref="CSOSLOG" /></logger>
+
+<logger name="scalabpe.HttpRequestLog" level="info" additivity="false"><appender-ref ref="HTTPREQUESTLOG" /></logger>
+<logger name="scalabpe.HttpRequestLog.access" level="info" additivity="false"><appender-ref ref="HTTPACCESSLOG" /></logger>
+
+<!--
+<logger name="scalabpe.plugin.http.HttpClientImpl" level="info" additivity="false"><appender-ref ref="ALL" /></logger>
+<logger name="scalabpe.plugin.http.HttpServerActor" level="info" additivity="false"><appender-ref ref="ALL" /></logger>
+<logger name="scalabpe.plugin.DbClient" level="info" additivity="false"><appender-ref ref="ALL" /></logger>
+<logger name="scalabpe.plugin.MemCacheClient" level="info" additivity="false"><appender-ref ref="ALL" /></logger>
+<logger name="scalabpe.plugin.RedisClient" level="info" additivity="false"><appender-ref ref="ALL" /></logger>
+<logger name="scalabpe.plugin.TlvCodec4Xhead" level="info" additivity="false"><appender-ref ref="ALL" /></logger>
+<logger name="scalabpe.plugin.ErrorCodeUtils" level="debug" additivity="false"><appender-ref ref="ALL" /></logger>
+-->
+
+<root level="warn"><appender-ref ref="ROOT" /></root>
+
+</configuration>
+
